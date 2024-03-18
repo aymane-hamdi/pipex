@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:15:14 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/18 20:10:22 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/18 21:53:55 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ void	execute(char *argv, char **envp);
 void cas_special(char *argv, char **envp);
 void	lop_her_doc(int argc, char *argv[], char **envp, int *fd);
 void	parent_process_her_doc(int argc, char **argv, char **envp);
+void run_script(char *script_path, char **envp);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:55:14 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/18 18:09:03 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/18 21:13:53 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ static void	child_process(char **argv, char **envp, int *fd)
 	{
 		if(argv[2][0]== '/')
 			cas_special(argv[2],envp);
+		else if(argv[2][0]== '.')
+			run_script(argv[2], envp);
 		else
 			execute(argv[2], envp);
 	}

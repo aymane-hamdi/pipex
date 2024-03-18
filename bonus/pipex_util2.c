@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/18 18:10:38 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/18 21:53:41 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,4 +104,19 @@ void	execute(char *argv, char **envp)
         exit(EXIT_FAILURE);
     }
 
+}
+void run_script(char *script_path, char **envp)
+{
+	char *path;
+	char **cmd;
+	path=script_path;
+	cmd = malloc(2* sizeof(char *));
+	cmd[0] = script_path;
+	cmd[1] = NULL;
+	if(execve(path, cmd, envp)== -1)
+	{
+		perror("execve failed");
+		exit(EXIT_FAILURE);
+	}
+	free(cmd);
 }
