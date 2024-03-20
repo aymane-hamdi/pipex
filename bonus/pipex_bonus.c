@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:30:28 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/18 21:55:36 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/20 00:57:03 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,11 @@ static void	child_process(char **argv, char **envp, int *fd, int i)
 	}
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
+	close(fd[1]);
 	if (argv[i][0] == '/')
 		cas_special(argv[i], envp);
+	else if (argv[i][0] == '.')
+		run_script(argv[i], envp);
 	else
 		execute(argv[i], envp);
 }
@@ -68,9 +71,9 @@ static void	parent_process(char argc, char **argv, char **envp)
 		exit(EXIT_FAILURE);  
 	}
 	dup2(fileout, STDOUT_FILENO);
-	if(argv[argc - 2][0]== '/')
+	if (argv[argc - 2][0]== '/')
 		cas_special(argv[argc - 2], envp);
-	else if(argv[argc - 2][0]== '.')
+	else if (argv[argc - 2][0] == '.')
 		run_script(argv[argc - 2], envp);
 	else
 		execute(argv[argc - 2], envp);
@@ -81,8 +84,9 @@ static void	lop(int argc, char *argv[], char **envp, int *fd)
 	int		i;
 	pid_t	pid1;
 
+	pid_t *pids = (pid_t *)malloc((argc - 3) * sizeof(pid_t));
 	i = 2;
-	while (i < argc - 2)
+	while (i <= argc - 2)
 	{
 		if (pipe(fd) == -1)
 		{
@@ -95,13 +99,25 @@ static void	lop(int argc, char *argv[], char **envp, int *fd)
 			perror("Error l'orsque de creation de processus");
 			exit(EXIT_FAILURE);  
 		}
-		if (pid1 == 0)
+		if (pid1 == 0 && i != argc - 2)
 			child_process(argv, envp, fd, i);
-		waitpid(pid1, NULL, 0);
+		else if (pid1 == 0 && i == argc - 2)
+			parent_process(argc, argv, envp);
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[1]);
+		close(fd[0]);
+		pids[i - 2] = pid1;
 		i++;
 	}
+	int j = 0;
+	while (j < argc - 2)
+	{
+		waitpid(*pids, NULL, 0);
+		pids++;
+		j++;
+	}
+	close(fd[0]);
+	close(fd[1]);
 }
 
 int	main(int argc, char *argv[], char **envp)
@@ -118,9 +134,9 @@ int	main(int argc, char *argv[], char **envp)
 		else
 		{
 			lop (argc, argv, envp, fd);
-			parent_process(argc, argv, envp);
 		}
 	}
 	else
 		bad_argument();
+
 }

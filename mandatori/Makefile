@@ -6,12 +6,12 @@
 #    By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/11 17:43:15 by ahamdi            #+#    #+#              #
-#    Updated: 2024/03/12 16:17:07 by ahamdi           ###   ########.fr        #
+#    Updated: 2024/03/19 17:32:04 by ahamdi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-src  = $(wildcard ../get-next-line/*.c) $(wildcard ../libft/*.c) pipex_util2.c pipex.c 
+src  = $(wildcard ../get-next-line/*.c) $(wildcard ../libft/*.c) pipex_util2.c pipex.c pipex_util1.c
 bonus_src = $(wildcard ../bonus/*.c) $(wildcard ../get-next-line/*.c)  $(wildcard ../libft/*.c) 
 obj = $(src:.c=.o)
 bonus_obj = $(bonus_src:.c=.o)

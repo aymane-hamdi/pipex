@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:24:49 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/18 21:56:14 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/19 22:46:00 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	child_process_her_doc(char **argv, char **envp, int *fd, int i)
 	close(fd[0]);
 	if (argv[i][0] == '/')
 		cas_special(argv[i], envp);
-	else if(argv[i][0]== '.')
+	else if (argv[i][0] == '.')
 		run_script(argv[i], envp);
 	else
 		execute(argv[i], envp);
@@ -57,7 +57,12 @@ void	parent_process_her_doc(int argc, char **argv, char **envp)
 		perror("Error lors de la duplication du descripteur de fichier");
 		exit(1);
 	}
-	execute(argv[argc - 2], envp);
+	if (argv[argc - 2][0] == '/')
+		cas_special(argv[argc - 2], envp);
+	else if (argv[argc - 2][0] == '.')
+		run_script(argv[argc - 2], envp);
+	else
+		execute(argv[argc - 2], envp);
 }
 
 void	lop_her_doc(int argc, char *argv[], char **envp, int *fd)

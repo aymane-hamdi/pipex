@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/18 21:03:11 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/19 17:35:57 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,20 +111,4 @@ char	**split_command(const char *command, int size)
 	end_ptr = start_ptr;
 	process_char(&cmd, &capacity, &start_ptr, &end_ptr);
 	return (cmd);
-}
-
-void run_script(char *script_path, char **envp)
-{
-	char *path;
-	char **cmd;
-	path=script_path;
-	cmd = malloc(2* sizeof(char *));
-	cmd[0] = script_path;
-	cmd[1] = NULL;
-	if(execve(path, cmd, envp)== -1)
-	{
-		perror("execve failed");
-		exit(EXIT_FAILURE);
-	}
-	free(cmd);
 }
