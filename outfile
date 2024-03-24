@@ -1,0 +1,10 @@
+drwxr-xr-x 2 aymane aymane  4096 Mar 24 10:54 bonus
+drwxr-xr-x 2 aymane aymane  4096 Mar 24 10:54 mandatori
+drwxr-xr-x 3 aymane aymane  4096 Mar 24 10:12 libft
+drwxr-xr-x 3 aymane aymane  4096 Mar 24 10:40 get-next-line
+-rw-r--r-- 1 aymane aymane   162 Mar 24 09:35 infile
+-rw-r--r-- 1 aymane aymane  1824 Mar 24 09:35 Makefile
+-rwxr-xr-x 1 aymane aymane     0 Mar 24 10:54 outfile
+-rwxr-xr-x 1 aymane aymane   155 Mar 24 09:35 script.sh
+-rwxr-xr-x 1 aymane aymane 22000 Mar 24 10:53 pipex
+total 52
