@@ -6,29 +6,33 @@
 #    By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/11 17:43:15 by ahamdi            #+#    #+#              #
-#    Updated: 2024/03/19 17:32:04 by ahamdi           ###   ########.fr        #
+#    Updated: 2024/03/23 21:32:45 by ahamdi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-src  = $(wildcard ../get-next-line/*.c) $(wildcard ../libft/*.c) pipex_util2.c pipex.c pipex_util1.c
-bonus_src = $(wildcard ../bonus/*.c) $(wildcard ../get-next-line/*.c)  $(wildcard ../libft/*.c) 
+src  =  mandatori/pipex_util2.c mandatori/pipex.c mandatori/pipex_util1.c 
+bonus_src =  bonus/fontion_herdoc.c bonus/pipex_bonus.c  bonus/pipex_bonus_util2.c bonus/pipex_bonus_utul1.c get-next-line/get_next_line_bonus.c  \
+             	get-next-line/get_next_line_utils_bonus.c 
 obj = $(src:.c=.o)
 bonus_obj = $(bonus_src:.c=.o)
 NAME = pipex
 BONUS_NAME = pipex_bonus
+LIBFT = libft/libft.a
 
 all:  $(NAME)
 
 $(NAME): $(obj)
-	gcc -Wall -Wextra -Werror -o $(NAME) $(obj)
+	$(MAKE) -C libft
+	gcc -Wall -Wextra -Werror -o $(NAME) $(obj) $(LIBFT)
 
 bonus: $(BONUS_NAME)
 
 $(BONUS_NAME): $(bonus_obj)
-	gcc -Wall -Wextra -Werror -o $(BONUS_NAME) $(bonus_obj)
+	$(MAKE) -C libft
+	gcc -Wall -Wextra -Werror -o $(BONUS_NAME) $(bonus_obj) $(LIBFT)
 
-%.o: %.c ../get-next-line/get_next_line.h ../libft/ libft.h pipex.h ../bonus/pipex_bonus.h
+%.o: %.c get-next-line/get_next_line.h  mandatori/pipex.h bonus/pipex_bonus.h
 	gcc -Wall -Wextra -Werror -c $< -o $@
 
 clean:

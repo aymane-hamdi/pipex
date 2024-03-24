@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_util2.c                                      :+:      :+:    :+:   */
+/*   pipex_bonus_util2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/18 21:53:41 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/23 23:10:42 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-
 char	*get_path(char **envp, char *cmd, int i)
 {
-	char	*path_new = NULL;
+	char	*path_new;
 	char	*path;
 	char	**path_split;
 
@@ -62,12 +61,13 @@ static int	ft_count_words(char const *str, char sep)
 }
 void cas_special(char *argv, char **envp)
 {
-		char **res;
-		char	**cmd ;
-		int		i = 0;
-		char	*path = NULL;
-		
+	char	**res;
+	char	**cmd ;
+	int		i;
+	char	*path;
+
 	path = argv;
+	i = 0;
     int k = ft_count_words(argv, '/');
     cmd = malloc(2* sizeof(char *));
     res = ft_split(argv, '/');
@@ -79,8 +79,6 @@ void cas_special(char *argv, char **envp)
         perror("execve failed");
         exit(EXIT_FAILURE);
     }
-	free(path);
-	free(cmd);
 }
 void	execute(char *argv, char **envp)
 {
@@ -93,17 +91,15 @@ void	execute(char *argv, char **envp)
     if (!path)
     {
         i = 0;
-        while (cmd[i])  // Only free if cmd[i] is not NULL
+        while (cmd[i])
             free(cmd[i++]);
         free(cmd);
-        exit(EXIT_FAILURE);
     }
     if(execve(path, cmd, envp)== -1)
     {
         perror("execve failed");
         exit(EXIT_FAILURE);
     }
-
 }
 void run_script(char *script_path, char **envp)
 {

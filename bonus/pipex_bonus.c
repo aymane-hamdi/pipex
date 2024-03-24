@@ -6,26 +6,18 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:30:28 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/20 00:57:03 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 00:02:33 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-static void	child_process(char **argv, char **envp, int *fd, int i)
+static void	child_process(char **argv, char **envp, int *fd, int i, int filein)
 {
-	int		filein;
 
 	if (i == 2)
 	{
-		filein = open(argv[1], O_RDONLY, 0777);
-		if (filein == -1)
-		{
-			perror("Error l'orsque l'ouverture du fichier");
-			exit(EXIT_FAILURE);  
-		}
 		dup2(filein, STDIN_FILENO);
-		close(filein);
 	}
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
@@ -68,47 +60,18 @@ static void	parent_process(char argc, char **argv, char **envp)
 	if (fileout == -1)
 	{
 		perror("Error l'orsque l'ouverture du fichier");
-		exit(EXIT_FAILURE);  
+		exit(1);  
 	}
 	dup2(fileout, STDOUT_FILENO);
-	if (argv[argc - 2][0]== '/')
+	if (argv[argc - 2][0] == '/')
 		cas_special(argv[argc - 2], envp);
 	else if (argv[argc - 2][0] == '.')
 		run_script(argv[argc - 2], envp);
 	else
 		execute(argv[argc - 2], envp);
 }
-
-static void	lop(int argc, char *argv[], char **envp, int *fd)
+void	wit_process(int argc, pid_t *pids, int *fd)
 {
-	int		i;
-	pid_t	pid1;
-
-	pid_t *pids = (pid_t *)malloc((argc - 3) * sizeof(pid_t));
-	i = 2;
-	while (i <= argc - 2)
-	{
-		if (pipe(fd) == -1)
-		{
-			perror("Error l'orsque de creation de pipe");
-			exit(EXIT_FAILURE);  
-		}
-		pid1 = fork();
-		if (pid1 == -1)
-		{
-			perror("Error l'orsque de creation de processus");
-			exit(EXIT_FAILURE);  
-		}
-		if (pid1 == 0 && i != argc - 2)
-			child_process(argv, envp, fd, i);
-		else if (pid1 == 0 && i == argc - 2)
-			parent_process(argc, argv, envp);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[1]);
-		close(fd[0]);
-		pids[i - 2] = pid1;
-		i++;
-	}
 	int j = 0;
 	while (j < argc - 2)
 	{
@@ -119,24 +82,59 @@ static void	lop(int argc, char *argv[], char **envp, int *fd)
 	close(fd[0]);
 	close(fd[1]);
 }
+static void whilloop(int *fd)
+{
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[1]);
+	close(fd[0]);
+}
+
+static void	lop(int argc, char *argv[], char **envp, int filein)
+{
+	int		i;
+	int		fd[2];
+	pid_t	*pids;
+
+	pids = (pid_t *)malloc((argc - 3) * sizeof(pid_t));
+	i = 2;
+	while (i <= argc - 2)
+	{	
+		if (pipe(fd) == -1)
+		{
+			perror("Error l'orsque de creation de pipe");
+			exit(EXIT_FAILURE);  
+		}
+		pids[i - 2] = fork();
+		if (pids[i - 2] == 0 && i != argc - 2)
+			child_process(argv, envp, fd, i, filein);
+		else if (pids[i - 2] == 0 && i == argc - 2)
+			parent_process(argc, argv, envp);
+		whilloop(fd);
+		i++;
+	}
+	wit_process(argc, pids, fd);
+}
 
 int	main(int argc, char *argv[], char **envp)
 {
+	int		filein;
 	int		fd[2];
 
 	if (argc >= 5)
 	{
 		if (ft_strncmp ("here_doc", argv[1], ft_strlen(argv[1])) == 0)
-		{
 			lop_her_doc(argc, argv, envp, fd);
-			parent_process_her_doc (argc, argv, envp);
-		}
 		else
 		{
-			lop (argc, argv, envp, fd);
+			filein = open(argv[1], O_RDONLY, 0777);
+			if (filein == -1)
+			{
+				perror("Error l'orsque l'ouverture du fichier");
+				exit(EXIT_FAILURE);
+			}
+			lop (argc, argv, envp, filein);
 		}
 	}
 	else
 		bad_argument();
-
 }

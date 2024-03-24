@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:24:49 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/19 22:46:00 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/23 23:07:28 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,24 @@ static void	child_process_her_doc(char **argv, char **envp, int *fd, int i)
 		while (1)
 		{
 			str = get_next_line(0);
-			if (!str)
-			{
-				perror("get_next_line failed");
-				break ;
-			}
-			if (!ft_strncmp(argv[i], str, ft_strlen(argv[i])))
+			if (!str || 
+				!ft_strncmp(ft_strjoin(argv[i], "\n"), str, ft_strlen(str)))
 				break ;
 			ft_putstr_fd(str, fd[1]);
 			free(str);
 		}
+		free(str);
 	}
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
-	if (argv[i][0] == '/')
+	if (argv[i][0] == '/' && i != 2)
 		cas_special(argv[i], envp);
-	else if (argv[i][0] == '.')
+	else if (argv[i][0] == '.' && i != 2)
 		run_script(argv[i], envp);
-	else
+	else if (i != 2)
 		execute(argv[i], envp);
+	else
+		exit(0);
 }
 
 void	parent_process_her_doc(int argc, char **argv, char **envp)
@@ -52,11 +51,7 @@ void	parent_process_her_doc(int argc, char **argv, char **envp)
 		perror("Error lors de l'ouverture du fichier");
 		exit(1);
 	}
-	if (dup2(fileout, STDOUT_FILENO) == -1)
-	{
-		perror("Error lors de la duplication du descripteur de fichier");
-		exit(1);
-	}
+	dup2(fileout, STDOUT_FILENO);
 	if (argv[argc - 2][0] == '/')
 		cas_special(argv[argc - 2], envp);
 	else if (argv[argc - 2][0] == '.')
@@ -65,30 +60,59 @@ void	parent_process_her_doc(int argc, char **argv, char **envp)
 		execute(argv[argc - 2], envp);
 }
 
-void	lop_her_doc(int argc, char *argv[], char **envp, int *fd)
+void	abderrafie_(int *fd, pid_t	*pids, int pid, int i)
+{
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[1]);
+	close(fd[0]);
+	pids[i - 2] = pid;
+}
+
+void	lop_her_doc(int argc, char **argv, char **envp, int *fd)
 {
 	int		i;
 	pid_t	pid1;
+	pid_t	*pids;
 
-	i = 2 ;
-	while (i < argc - 2)
+	pids = (pid_t *)malloc((argc - 4) * sizeof(pid_t));
+	i = 2;
+	while (i <= argc - 2)
 	{
-		if (pipe(fd) == -1)
-		{
-			perror("Error l'orsque de creation de pipe");
-			exit(1); 
-		}
+		pipe(fd);
 		pid1 = fork();
 		if (pid1 == -1)
 		{
-			perror("Error l'orsque de creation de processus");
+			perror("Error lors de l'ouverture du fichier");
 			exit(1);
 		}
-		if (pid1 == 0)
+		if (pid1 == 0 && i != argc - 2)
 			child_process_her_doc(argv, envp, fd, i);
-		waitpid(pid1, NULL, 0);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[1]);
+		else if (pid1 == 0 && i == argc - 2)
+			parent_process_her_doc(argc, argv, envp);
+		abderrafie_(fd, pids, pid1, i);
+		i++;
+	}
+	wit_process(argc, pids, fd);
+}
+
+void	bad_argument(void)
+{
+	int		i;
+	char	*str;
+	char	*s;
+
+	i = 0;
+	str = "\tError: Bad argument\n";
+	while (str[i] != '\0')
+	{
+		write(2, &str[i], 1);
+		i++;
+	}
+	i = 0;
+	s = "\tEx: ./pipex <file1> <cmd1> <cmd2><file2>\n";
+	while (s[i] != '\0')
+	{
+		write(1, &s[i], 1);
 		i++;
 	}
 }

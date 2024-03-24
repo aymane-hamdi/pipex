@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:55:14 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/19 20:11:05 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 01:05:45 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,73 +56,80 @@ char	*get_path(char **envp, char *cmd, int i)
 	return (path_split[i]);
 }
 
-static	void	child_process(char **argv, char **envp, int *fd)
+static void	child(char **argv, char **envp, int *fd, int filein)
 {
-	int		filein;
-
-	filein = open(argv[1], O_RDONLY, 0777);
-	if (filein == -1)
-	{
-		perror("Error l'orsque l'ouverture du fichier");
-		return ;
-	}
 	dup2(filein, STDIN_FILENO);
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
-	if (argv[2] != NULL && envp != NULL)
-	{
-		if (argv[2][0] == '/')
-			cas_special(argv[2], envp);
-		else if (argv[2][0] == '.')
-			run_script(argv[2], envp);
-		else
-			execute(argv[2], envp);
-	}
-	else 
-		perror("error dans argv ou envp");
+	if (argv[2][0] == '/')
+		cas_special(argv[2], envp);
+	else if (argv[2][0] == '.')
+		run_script(argv[2], envp);
+	else
+		execute(argv[2], envp);
 }
 
-void	parent(char **argv, char **envp, int *fd, int pid1)
+static void	parent(int *fd, char **argv, char **envp)
 {
-	pid_t	pid2;
 	int		fileout;
 
-	pid2 = fork();
-	if (pid2 == 0)
+	fileout = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (fileout == -1)
 	{
-		fileout = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-		if (fileout == -1)
-			perror("Error l'orsque l'ouverture du fichier");
-		dup2(fd[0], STDIN_FILENO);
-		dup2(fileout, STDOUT_FILENO);
-		close(fd[1]);
-		execute(argv[3], envp);
+		perror("Error l'orsque l'ouverture du fichier");
+		exit(1);  
 	}
+	dup2(fd[0], STDIN_FILENO);
+	close(fd[1]);
+	dup2(fileout, STDOUT_FILENO);
+	if (argv[3][0] == '/')
+		cas_special(argv[3], envp);
+	else if (argv[3][0] == '.')
+		run_script(argv[3], envp);
 	else
-	{
-		close(fd[0]);
-		close(fd[1]);
-		waitpid(pid1, NULL, 0);
-		waitpid(pid2, NULL, 0);
-	}
+		execute(argv[3], envp);
 }
-
+void	wit_process(int *fd ,int pid)
+{
+	waitpid(pid, NULL, 0);
+	close(fd[0]);
+	close(fd[1]);
+}
 int	main(int argc, char *argv[], char **envp)
 {
-	int		fd[2];
-	pid_t	pid1;
-
-	if (argc == 5)
-	{
-		if (pipe(fd) == -1)
-			perror("Error l'orsque de creation de pipe");
-		pid1 = fork();
-		if (pid1 == -1)
-			perror("Error l'orsque de creation de processus");
-		if (pid1 == 0)
-			child_process(argv, envp, fd);
-		else
-			parent(argv, envp, fd, pid1);
+    int		fd[2];
+    int		pid;
+    int		filein;
+    if (argc == 5)
+    {
+        filein = open(argv[1], O_RDONLY);
+        if (filein == -1)
+        {
+            perror("Error l'orsque l'ouverture du fichier");
+            exit(EXIT_FAILURE);
+        }
+        if (pipe(fd) == -1)
+        {
+            perror("Error l'orsque de creation de pipe");
+            exit(EXIT_FAILURE);  
+        }
+        pid = fork();
+        if (pid == -1)
+        {
+            perror("Error lors de la création du processus");
+            exit(EXIT_FAILURE);
+        }
+        if (pid == 0)
+		{
+			child(argv, envp, fd, filein);
+			system("leaks pipex");
+		}
+        else
+		{
+			 parent(fd, argv, envp);
+			 system("leaks pipex");
+		}
+        wit_process(fd, pid);	
 	}
 	else
 		bad_argument();
