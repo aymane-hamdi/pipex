@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 10:51:43 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 22:07:42 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 23:42:05 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>
 # include "../libft/libft.h"
 
+void	erro_file(void);
 void	execute(char *argv, char **envp);
 char	**split_command(const char *command);
 void	bad_argument(void);
