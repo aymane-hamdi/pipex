@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:24:49 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/23 23:07:28 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 21:25:00 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	child_process_her_doc(char **argv, char **envp, int *fd, int i)
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	if (argv[i][0] == '/' && i != 2)
-		cas_special(argv[i], envp);
+		commad_path(argv[i], envp);
 	else if (argv[i][0] == '.' && i != 2)
 		run_script(argv[i], envp);
 	else if (i != 2)
@@ -53,7 +53,7 @@ void	parent_process_her_doc(int argc, char **argv, char **envp)
 	}
 	dup2(fileout, STDOUT_FILENO);
 	if (argv[argc - 2][0] == '/')
-		cas_special(argv[argc - 2], envp);
+		commad_path(argv[argc - 2], envp);
 	else if (argv[argc - 2][0] == '.')
 		run_script(argv[argc - 2], envp);
 	else

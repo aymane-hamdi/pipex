@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:55:03 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/23 23:10:58 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 21:17:21 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	process_char(char ***cmd, int *capacity,
 	}
 }
 
-char	**split_command(const char *command, int size)
+char	**split_command(const char *command)
 {
 	int		capacity;
 	char	*start_ptr;

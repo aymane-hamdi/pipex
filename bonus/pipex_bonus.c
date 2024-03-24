@@ -6,24 +6,19 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:30:28 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 00:02:33 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 21:47:35 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-static void	child_process(char **argv, char **envp, int *fd, int i, int filein)
+static void	child_process(char **argv, char **envp, int *fd, int i)
 {
-
-	if (i == 2)
-	{
-		dup2(filein, STDIN_FILENO);
-	}
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	close(fd[1]);
 	if (argv[i][0] == '/')
-		cas_special(argv[i], envp);
+		commad_path(argv[i], envp);
 	else if (argv[i][0] == '.')
 		run_script(argv[i], envp);
 	else
@@ -60,33 +55,15 @@ static void	parent_process(char argc, char **argv, char **envp)
 	if (fileout == -1)
 	{
 		perror("Error l'orsque l'ouverture du fichier");
-		exit(1);  
+		exit(EXIT_FAILURE); 
 	}
 	dup2(fileout, STDOUT_FILENO);
 	if (argv[argc - 2][0] == '/')
-		cas_special(argv[argc - 2], envp);
+		commad_path(argv[argc - 2], envp);
 	else if (argv[argc - 2][0] == '.')
 		run_script(argv[argc - 2], envp);
 	else
 		execute(argv[argc - 2], envp);
-}
-void	wit_process(int argc, pid_t *pids, int *fd)
-{
-	int j = 0;
-	while (j < argc - 2)
-	{
-		waitpid(*pids, NULL, 0);
-		pids++;
-		j++;
-	}
-	close(fd[0]);
-	close(fd[1]);
-}
-static void whilloop(int *fd)
-{
-	dup2(fd[0], STDIN_FILENO);
-	close(fd[1]);
-	close(fd[0]);
 }
 
 static void	lop(int argc, char *argv[], char **envp, int filein)
@@ -98,15 +75,18 @@ static void	lop(int argc, char *argv[], char **envp, int filein)
 	pids = (pid_t *)malloc((argc - 3) * sizeof(pid_t));
 	i = 2;
 	while (i <= argc - 2)
-	{	
+	{
 		if (pipe(fd) == -1)
-		{
-			perror("Error l'orsque de creation de pipe");
-			exit(EXIT_FAILURE);  
-		}
+			erro();
 		pids[i - 2] = fork();
+		if (pids[i - 2] == -1)
+			erro();
 		if (pids[i - 2] == 0 && i != argc - 2)
-			child_process(argv, envp, fd, i, filein);
+		{
+			if (i == 2)
+				dup2(filein, STDIN_FILENO);
+			child_process(argv, envp, fd, i);
+		}
 		else if (pids[i - 2] == 0 && i == argc - 2)
 			parent_process(argc, argv, envp);
 		whilloop(fd);

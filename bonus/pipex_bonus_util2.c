@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/23 23:10:42 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 21:23:46 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,60 +59,65 @@ static int	ft_count_words(char const *str, char sep)
 	}
 	return (count);
 }
-void cas_special(char *argv, char **envp)
+
+void	commad_path(char *argv, char **envp)
 {
 	char	**res;
 	char	**cmd ;
 	int		i;
 	char	*path;
+	int		k;
 
 	path = argv;
 	i = 0;
-    int k = ft_count_words(argv, '/');
-    cmd = malloc(2* sizeof(char *));
-    res = ft_split(argv, '/');
-    cmd[0] = res[k - 1];
-    cmd[1] = NULL;
-    free(res); 
-	if(execve(path, cmd, envp)== -1)
-    {
-        perror("execve failed");
-        exit(EXIT_FAILURE);
-    }
-}
-void	execute(char *argv, char **envp)
-{
-    char	**cmd = NULL;
-    int		i = 0;
-    char	*path = NULL;
-    
-    cmd = split_command(argv,i);
-    path = get_path(envp, cmd[0], i);
-    if (!path)
-    {
-        i = 0;
-        while (cmd[i])
-            free(cmd[i++]);
-        free(cmd);
-    }
-    if(execve(path, cmd, envp)== -1)
-    {
-        perror("execve failed");
-        exit(EXIT_FAILURE);
-    }
-}
-void run_script(char *script_path, char **envp)
-{
-	char *path;
-	char **cmd;
-	path=script_path;
-	cmd = malloc(2* sizeof(char *));
-	cmd[0] = script_path;
+	k = ft_count_words(argv, '/');
+	cmd = malloc(2 * sizeof(char *));
+	res = ft_split(argv, '/');
+	cmd[0] = res[k - 1];
 	cmd[1] = NULL;
-	if(execve(path, cmd, envp)== -1)
+	free(res); 
+	if (execve(path, cmd, envp) == -1)
 	{
 		perror("execve failed");
 		exit(EXIT_FAILURE);
 	}
-	free(cmd);
+}
+
+void	execute(char *argv, char **envp)
+{
+	char	**cmd;
+	int		i;
+	char	*path;
+
+	i = 0;
+	cmd = split_command(argv);
+	path = get_path(envp, cmd[0], i);
+	if (!path)
+	{
+		i = 0;
+		while (cmd[i])
+			free(cmd[i++]);
+		free(cmd);
+	}
+	if (execve(path, cmd, envp) == -1)
+	{
+		perror("execve failed");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void	run_script(char *script_path, char **envp)
+{
+	char	*path;
+	char	**cmd;
+
+	path = script_path;
+	cmd = malloc(2 * sizeof(char *));
+	cmd[0] = script_path;
+	cmd[1] = NULL;
+	if (execve(path, cmd, envp) == -1)
+	{
+		perror("execve failed");
+		exit(EXIT_FAILURE);
+	}
 }

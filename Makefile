@@ -6,14 +6,14 @@
 #    By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/11 17:43:15 by ahamdi            #+#    #+#              #
-#    Updated: 2024/03/23 21:32:45 by ahamdi           ###   ########.fr        #
+#    Updated: 2024/03/24 21:35:40 by ahamdi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-src  =  mandatori/pipex_util2.c mandatori/pipex.c mandatori/pipex_util1.c 
-bonus_src =  bonus/fontion_herdoc.c bonus/pipex_bonus.c  bonus/pipex_bonus_util2.c bonus/pipex_bonus_utul1.c get-next-line/get_next_line_bonus.c  \
-             	get-next-line/get_next_line_utils_bonus.c 
+src  =  mandatori/pipex_util2.c mandatori/pipex.c mandatori/pipex_util1.c  mandatori/pipex_util3.c
+bonus_src =  bonus/fontion_herdoc.c bonus/pipex_bonus.c bonus/pipex_bonus_uil3.c  bonus/pipex_bonus_util2.c bonus/pipex_bonus_utul1.c get-next-line/get_next_line_bonus.c  \
+             	get-next-line/get_next_line_utils_bonus.c  
 obj = $(src:.c=.o)
 bonus_obj = $(bonus_src:.c=.o)
 NAME = pipex

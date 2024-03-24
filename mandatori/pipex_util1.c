@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:30:56 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 00:53:34 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/24 18:21:36 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,25 @@ void	cas_special(char *argv, char **envp)
 
 void	execute(char *argv, char **envp)
 {
-    char	**cmd = NULL;
-    int		i = 0;
-    char	*path = NULL;
-    
-    cmd = split_command(argv,i);
-    path = get_path(envp, cmd[0], i);
-    if (!path)
-    {
-        i = 0;
-        while (cmd[i])
-            free(cmd[i++]);
-        free(cmd);
-    }
-    if(execve(path, cmd, envp)== -1)
-    {
-        perror("execve failed");
-        exit(EXIT_FAILURE);
-    }
+	char	**cmd;
+	int		i;
+	char	*path;
+
+	i = 0;
+	cmd = split_command(argv);
+	path = get_path(envp, cmd[0], i);
+	if (!path)
+	{
+		i = 0;
+		while (cmd[i])
+			free(cmd[i++]);
+		free(cmd);
+	}
+	if (execve(path, cmd, envp) == -1)
+	{
+		perror("execve failed");
+		exit(EXIT_FAILURE);
+	}
 }
 
 void	bad_argument(void)
@@ -78,23 +79,4 @@ void	bad_argument(void)
 		write(1, &s[i], 1);
 		i++;
 	}
-}
-
-int	ft_count_words(char const *str, char sep)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (str[i] != '\0')
-	{
-		while (str[i] == sep)
-			i++;
-		if (str[i] != '\0')
-			count++;
-		while (str[i] && str[i] != sep)
-			i++;
-	}
-	return (count);
 }
