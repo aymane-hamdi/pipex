@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:55:14 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 23:43:14 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 22:50:25 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	run_script(char *script_path, char **envp)
 	cmd[1] = NULL;
 	if (execve(path, cmd, envp) == -1)
 	{
-		perror("execve failed");
-		exit(EXIT_FAILURE);
+		perror("Bad command");
+		exit(127);
 	}
 	free(cmd);
 }

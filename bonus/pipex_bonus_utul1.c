@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:55:03 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 21:17:21 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 22:30:24 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 char	*remove_spaces_and_single_quotes(const char *str)
 {
-	char	*result;
 	char	*dst;
+	int		i;
 
-	result = (char *)malloc(strlen(str) + 1);
-	if (!result)
+	i = 0;
+	dst = (char *)malloc(ft_strlen(str) + 1);
+	if (!dst)
 		exit(EXIT_FAILURE);
-	dst = result;
 	while (*str)
 	{
 		if (*str != '\'' && (*(str + 1) != '{' || *(str - 1) != '}'))
-			*dst++ = *str;
+			dst[i++] = *str;
 		str++;
 	}
-	*dst = '\0';
-	return (result);
+	dst[i] = '\0';
+	return (dst);
 }
 
 char	**realloc_cmd(char ***cmd, int *capacity)
@@ -50,8 +50,7 @@ char	**realloc_cmd(char ***cmd, int *capacity)
 		i++;
 	}
 	free(*cmd);
-	*cmd = new_cmd;
-	return (*cmd);
+	return (new_cmd);
 }
 
 void	add_arg_to_cmd(char **cmd, int *size, char *start_ptr)
@@ -59,7 +58,7 @@ void	add_arg_to_cmd(char **cmd, int *size, char *start_ptr)
 	char	*arg;
 
 	arg = remove_spaces_and_single_quotes(start_ptr);
-	if (strlen(arg) > 0)
+	if (ft_strlen(arg) > 0)
 	{
 		cmd[*size] = arg;
 		(*size)++;
@@ -73,12 +72,12 @@ void	process_char(char ***cmd, int *capacity,
 	int	size ;
 
 	size = 0;
+	in_single_quotes = 0;
 	while (**end_ptr)
 	{
-		if (**end_ptr == '\'' && ((*(*end_ptr + 1) && *(*end_ptr + 1) == '{') 
-				|| (*end_ptr != *start_ptr && *(*end_ptr - 1) == '}')))
-			in_single_quotes = !in_single_quotes;
-		else if (**end_ptr == ' ' && !in_single_quotes)
+		if (**end_ptr == '\'')
+			in_single_quotes++;
+		else if (**end_ptr == ' ' && (in_single_quotes % 2) == 0)
 		{
 			**end_ptr = '\0';
 			if (size >= *capacity - 1) 

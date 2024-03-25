@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:24:49 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 21:25:00 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 23:05:06 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static void	child_process_her_doc(char **argv, char **envp, int *fd, int i)
 		while (1)
 		{
 			str = get_next_line(0);
-			if (!str || 
-				!ft_strncmp(ft_strjoin(argv[i], "\n"), str, ft_strlen(str)))
+			if (!str
+				||!ft_strncmp(ft_strjoin(argv[i], "\n"), str, ft_strlen(str)))
 				break ;
 			ft_putstr_fd(str, fd[1]);
 			free(str);
@@ -48,8 +48,8 @@ void	parent_process_her_doc(int argc, char **argv, char **envp)
 	fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fileout == -1)
 	{
-		perror("Error lors de l'ouverture du fichier");
-		exit(1);
+		perror("Error in open file");
+		exit(2);
 	}
 	dup2(fileout, STDOUT_FILENO);
 	if (argv[argc - 2][0] == '/')
@@ -64,7 +64,6 @@ void	abderrafie_(int *fd, pid_t	*pids, int pid, int i)
 {
 	dup2(fd[0], STDIN_FILENO);
 	close(fd[1]);
-	close(fd[0]);
 	pids[i - 2] = pid;
 }
 
@@ -74,25 +73,23 @@ void	lop_her_doc(int argc, char **argv, char **envp, int *fd)
 	pid_t	pid1;
 	pid_t	*pids;
 
-	pids = (pid_t *)malloc((argc - 4) * sizeof(pid_t));
+	pids = (pid_t *)malloc((argc - 3) * sizeof(pid_t));
 	i = 2;
 	while (i <= argc - 2)
 	{
-		pipe(fd);
+		if (pipe(fd) == -1)
+			erro();
 		pid1 = fork();
 		if (pid1 == -1)
-		{
-			perror("Error lors de l'ouverture du fichier");
-			exit(1);
-		}
+			erro();
 		if (pid1 == 0 && i != argc - 2)
 			child_process_her_doc(argv, envp, fd, i);
 		else if (pid1 == 0 && i == argc - 2)
 			parent_process_her_doc(argc, argv, envp);
-		abderrafie_(fd, pids, pid1, i);
+		whilloop(fd);
 		i++;
 	}
-	wit_process(argc, pids, fd);
+	wit_process(argc, &pids, fd);
 }
 
 void	bad_argument(void)

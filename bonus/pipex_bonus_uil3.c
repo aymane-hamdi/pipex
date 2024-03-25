@@ -6,23 +6,23 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 21:21:19 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 21:48:03 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 23:04:33 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	wit_process(int argc, pid_t *pids, int *fd)
+void	wit_process(int argc, pid_t **pids, int *fd)
 {
 	int	j;
 
 	j = 0;
 	while (j < argc - 2)
 	{
-		waitpid(*pids, NULL, 0);
-		pids++;
+		waitpid((*pids)[j], NULL, 0);
 		j++;
 	}
+	free(*pids);
 	close(fd[0]);
 	close(fd[1]);
 }
@@ -37,5 +37,5 @@ void	whilloop(int *fd)
 void	erro(void)
 {
 	perror("Error in pipe or process");
-	exit(EXIT_FAILURE);
+	exit(3);
 }

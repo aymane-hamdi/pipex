@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:30:28 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 21:47:35 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 22:54:54 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ static void	parent_process(char argc, char **argv, char **envp)
 	fileout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (fileout == -1)
 	{
-		perror("Error l'orsque l'ouverture du fichier");
-		exit(EXIT_FAILURE); 
+		perror("Error in open file");
+		exit(2); 
 	}
 	dup2(fileout, STDOUT_FILENO);
 	if (argv[argc - 2][0] == '/')
@@ -92,7 +92,7 @@ static void	lop(int argc, char *argv[], char **envp, int filein)
 		whilloop(fd);
 		i++;
 	}
-	wit_process(argc, pids, fd);
+	wit_process(argc, &pids, fd);
 }
 
 int	main(int argc, char *argv[], char **envp)
@@ -103,14 +103,16 @@ int	main(int argc, char *argv[], char **envp)
 	if (argc >= 5)
 	{
 		if (ft_strncmp ("here_doc", argv[1], ft_strlen(argv[1])) == 0)
+		{
 			lop_her_doc(argc, argv, envp, fd);
+		}
 		else
 		{
 			filein = open(argv[1], O_RDONLY, 0777);
 			if (filein == -1)
 			{
-				perror("Error l'orsque l'ouverture du fichier");
-				exit(EXIT_FAILURE);
+				perror("Error in open file");
+				exit(2);
 			}
 			lop (argc, argv, envp, filein);
 		}

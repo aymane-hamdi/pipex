@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 21:23:46 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 22:52:29 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ void	commad_path(char *argv, char **envp)
 	free(res); 
 	if (execve(path, cmd, envp) == -1)
 	{
-		perror("execve failed");
-		exit(EXIT_FAILURE);
+		perror("Bad command");
+		exit(127);
 	}
 }
 
@@ -101,8 +101,8 @@ void	execute(char *argv, char **envp)
 	}
 	if (execve(path, cmd, envp) == -1)
 	{
-		perror("execve failed");
-		exit(EXIT_FAILURE);
+		perror("Bad command");
+		exit(127);
 	}
 }
 
@@ -117,7 +117,7 @@ void	run_script(char *script_path, char **envp)
 	cmd[1] = NULL;
 	if (execve(path, cmd, envp) == -1)
 	{
-		perror("execve failed");
-		exit(EXIT_FAILURE);
+		perror("Bad command");
+		exit(127);
 	}
 }

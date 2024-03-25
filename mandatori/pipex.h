@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 10:51:43 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 23:42:05 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 20:54:09 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-# include <string.h>
 # include <stdio.h> 
 # include <sys/wait.h>
 # include <fcntl.h>

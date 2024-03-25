@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:30:56 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/24 18:21:36 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/25 22:50:04 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void	cas_special(char *argv, char **envp)
 	free(res); 
 	if (execve(path, cmd, envp) == -1)
 	{
-		perror("execve failed");
-		exit(EXIT_FAILURE);
+		perror("Bad command");
+		exit(127);
 	}
 }
 
@@ -54,8 +54,8 @@ void	execute(char *argv, char **envp)
 	}
 	if (execve(path, cmd, envp) == -1)
 	{
-		perror("execve failed");
-		exit(EXIT_FAILURE);
+		perror("Bad command");
+		exit(127);
 	}
 }
 
