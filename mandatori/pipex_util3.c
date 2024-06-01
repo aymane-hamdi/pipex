@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 16:45:21 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 23:02:18 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/27 16:05:28 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,16 @@ int	ft_count_words(char const *str, char sep)
 	return (count);
 }
 
-void	wit_process(int *fd, int pid, int pid1)
+void	wit_process(int *fd, int pid, pid_t pid1)
 {
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid, NULL, 0);
 	waitpid(pid1, NULL, 0);
+}
+
+void	errer_cmd(void)
+{
+	perror("invalide command");
+	exit(127);
 }

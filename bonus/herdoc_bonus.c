@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:24:49 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 23:05:06 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/27 00:51:27 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	child_process_her_doc(char **argv, char **envp, int *fd, int i)
 	close(fd[0]);
 	if (argv[i][0] == '/' && i != 2)
 		commad_path(argv[i], envp);
-	else if (argv[i][0] == '.' && i != 2)
+	else if (argv[i][0] == '.' && (argv[i][1] == '/' && i != 2))
 		run_script(argv[i], envp);
 	else if (i != 2)
 		execute(argv[i], envp);
@@ -54,17 +54,10 @@ void	parent_process_her_doc(int argc, char **argv, char **envp)
 	dup2(fileout, STDOUT_FILENO);
 	if (argv[argc - 2][0] == '/')
 		commad_path(argv[argc - 2], envp);
-	else if (argv[argc - 2][0] == '.')
+	else if (argv[argc - 2][0] == '.' && argv[argc - 2][1] == '/')
 		run_script(argv[argc - 2], envp);
 	else
 		execute(argv[argc - 2], envp);
-}
-
-void	abderrafie_(int *fd, pid_t	*pids, int pid, int i)
-{
-	dup2(fd[0], STDIN_FILENO);
-	close(fd[1]);
-	pids[i - 2] = pid;
 }
 
 void	lop_her_doc(int argc, char **argv, char **envp, int *fd)
@@ -74,9 +67,12 @@ void	lop_her_doc(int argc, char **argv, char **envp, int *fd)
 	pid_t	*pids;
 
 	pids = (pid_t *)malloc((argc - 3) * sizeof(pid_t));
+	if (!pids)
+		exit(1);
 	i = 2;
 	while (i <= argc - 2)
 	{
+		filecommade(argv, envp, argc);
 		if (pipe(fd) == -1)
 			erro();
 		pid1 = fork();
@@ -92,24 +88,8 @@ void	lop_her_doc(int argc, char **argv, char **envp, int *fd)
 	wit_process(argc, &pids, fd);
 }
 
-void	bad_argument(void)
+void	malloc_erro(int *str)
 {
-	int		i;
-	char	*str;
-	char	*s;
-
-	i = 0;
-	str = "\tError: Bad argument\n";
-	while (str[i] != '\0')
-	{
-		write(2, &str[i], 1);
-		i++;
-	}
-	i = 0;
-	s = "\tEx: ./pipex <file1> <cmd1> <cmd2><file2>\n";
-	while (s[i] != '\0')
-	{
-		write(1, &s[i], 1);
-		i++;
-	}
+	if (!str)
+		exit(1);
 }

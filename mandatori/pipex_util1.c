@@ -6,33 +6,32 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 17:30:56 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 22:50:04 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/29 16:44:24 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	cas_special(char *argv, char **envp)
+void	command_path(char *argv, char **envp)
 {
 	char	**res;
 	char	**cmd ;
 	int		i;
-	char	*path;
 	int		k;
 
 	i = 0;
-	path = NULL;
-	path = argv;
 	k = ft_count_words(argv, '/');
 	cmd = malloc(2 * sizeof(char *));
+	if (!cmd)
+		exit(1);
 	res = ft_split(argv, '/');
 	cmd[0] = res[k - 1];
 	cmd[1] = NULL;
 	free(res); 
-	if (execve(path, cmd, envp) == -1)
+	if (execve(argv, cmd, envp) == -1)
 	{
 		perror("Bad command");
-		exit(127);
+		exit(0);
 	}
 }
 
@@ -55,7 +54,7 @@ void	execute(char *argv, char **envp)
 	if (execve(path, cmd, envp) == -1)
 	{
 		perror("Bad command");
-		exit(127);
+		exit(0);
 	}
 }
 
@@ -76,7 +75,25 @@ void	bad_argument(void)
 	s = "\tEx: ./pipex <file1> <cmd1> <cmd2><file2>\n";
 	while (s[i] != '\0')
 	{
-		write(1, &s[i], 1);
+		write(2, &s[i], 1);
 		i++;
+	}
+}
+
+void	filecommade(char **argv, char **envp)
+{
+	char	**cmd;
+
+	if (argv[3][0] == '\0')
+		errer_cmd();
+	if (argv[3][0] == '/')
+	{
+		if (access(argv[3], X_OK) != 0)
+			errer_cmd();
+	}
+	if (argv[3][0] == '.' && argv[3][1] == '/')
+	{
+		if (access(argv[3], X_OK) != 0)
+			errer_cmd();
 	}
 }

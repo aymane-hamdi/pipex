@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 12:15:14 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 20:55:10 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/27 02:04:28 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <fcntl.h>
-# include "../libft/libft.h"
-# include "../get-next-line/get_next_line_bonus.h"
+# include "../libftt_/libft.h"
+# include "../getNextLine/get_next_line_bonus.h"
 
 char	*get_path(char **envp, char *cmd, int i);
 void	whilloop(int *fd);
@@ -31,5 +31,8 @@ void	wit_process(int argc, pid_t **pids, int *fd);
 void	lop_her_doc(int argc, char *argv[], char **envp, int *fd);
 void	parent_process_her_doc(int argc, char **argv, char **envp);
 void	run_script(char *script_path, char **envp);
+void	errer_cmd(void);
+void	filecommade(char **argv, char **envp, int argc);
+void	malloc_erro(int *str);
 
 #endif

@@ -1,41 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus_uil3.c                                 :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/24 21:21:19 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 23:04:33 by ahamdi           ###   ########.fr       */
+/*   Created: 2023/12/06 13:21:46 by ahamdi            #+#    #+#             */
+/*   Updated: 2024/03/14 20:42:03 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "libft.h"
 
-void	wit_process(int argc, pid_t **pids, int *fd)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	int	j;
+	int		size_total;
+	char	*res;
+	int		i;
+	int		j;
 
 	j = 0;
-	while (j < argc - 2)
+	i = 0;
+	if (!s1)
+		return (ft_strdup(s2));
+	size_total = ft_strlen(s1) + ft_strlen(s2);
+	res = malloc(size_total + 1);
+	if (!res)
+		return (NULL);
+	while (s1[i] != '\0')
 	{
-		waitpid((*pids)[j], NULL, 0);
-		j++;
+		res[i] = s1[i];
+		i++;
 	}
-	free(*pids);
-	close(fd[0]);
-	close(fd[1]);
-}
-
-void	whilloop(int *fd)
-{
-	dup2(fd[0], STDIN_FILENO);
-	close(fd[1]);
-	close(fd[0]);
-}
-
-void	erro(void)
-{
-	perror("Error in pipe or process");
-	exit(3);
+	while (s2[j] != '\0')
+		res[i++] = s2[j++];
+	res[i] = '\0';
+	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:55:14 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 22:50:25 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/29 16:52:32 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,18 @@
 
 void	run_script(char *script_path, char **envp)
 {
-	char	*path;
 	char	**cmd;
 
-	path = script_path;
 	cmd = malloc(2 * sizeof(char *));
+	if (!cmd)
+		exit(1);
 	cmd[0] = script_path;
 	cmd[1] = NULL;
-	if (execve(path, cmd, envp) == -1)
+	if (execve(script_path, cmd, envp) == -1)
 	{
 		perror("Bad command");
-		exit(127);
+		exit(0);
 	}
-	free(cmd);
 }
 
 char	*get_path(char **envp, char *cmd, int i)
@@ -37,9 +36,9 @@ char	*get_path(char **envp, char *cmd, int i)
 
 	while (envp[i++])
 	{
-		if (ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i]) - 5) != NULL)
+		if (ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i])) != NULL)
 		{
-			path = ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i]) - 5) + 5; 
+			path = ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i])) + 5; 
 			break ;
 		}
 	}
@@ -60,22 +59,28 @@ char	*get_path(char **envp, char *cmd, int i)
 
 static void	child(char **argv, char **envp, int *fd, int filein)
 {
+	if (argv[2][0] == '\0')
+	{
+		perror("invalide command");
+		exit(0);
+	}
 	dup2(filein, STDIN_FILENO);
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	if (argv[2][0] == '/')
-		cas_special(argv[2], envp);
-	else if (argv[2][0] == '.')
+		command_path(argv[2], envp);
+	else if (argv[2][0] == '.' && argv[2][1] == '/')
 		run_script(argv[2], envp);
 	else
 		execute(argv[2], envp);
 }
 
-static void	parent(int *fd, char **argv, char **envp, int pid)
+static void	parent(int *fd, char **argv, char **envp, pid_t pid)
 {
 	int		fileout;
 	pid_t	pid1;
 
+	filecommade(argv, envp);
 	pid1 = fork();
 	if (pid1 == -1)
 		erro();
@@ -88,7 +93,7 @@ static void	parent(int *fd, char **argv, char **envp, int pid)
 		close(fd[1]);
 		dup2(fileout, STDOUT_FILENO);
 		if (argv[3][0] == '/')
-			cas_special(argv[3], envp);
+			command_path(argv[3], envp);
 		else if (argv[3][0] == '.' && argv[3][1] == '/')
 			run_script(argv[3], envp);
 		else
@@ -116,7 +121,10 @@ int	main(int argc, char *argv[], char **envp)
 			erro();
 		if (pid == 0)
 			child(argv, envp, fd, filein);
-		parent(fd, argv, envp, pid);
+		else
+		{
+			parent(fd, argv, envp, pid);
+		}
 	}
 	else
 		bad_argument();

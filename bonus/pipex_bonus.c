@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 11:30:28 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 22:54:54 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/29 16:57:28 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,17 @@
 
 static void	child_process(char **argv, char **envp, int *fd, int i)
 {
+	if (argv[i][0] == '\0')
+	{
+		perror("invalide command");
+		exit(0);
+	}
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	close(fd[1]);
 	if (argv[i][0] == '/')
 		commad_path(argv[i], envp);
-	else if (argv[i][0] == '.')
+	else if (argv[i][0] == '.' && (argv[i][1] == '/'))
 		run_script(argv[i], envp);
 	else
 		execute(argv[i], envp);
@@ -39,7 +44,7 @@ static void	bad_argument(void)
 		i++;
 	}
 	i = 0;
-	s = "\tEx: ./pipex <file1> <cmd1> <cmd2><file2>\n";
+	s = "\tEx: ./pipex <file1> <cmd1> <cmd2>...<file2>\n";
 	while (s[i] != '\0')
 	{
 		write(1, &s[i], 1);
@@ -60,7 +65,7 @@ static void	parent_process(char argc, char **argv, char **envp)
 	dup2(fileout, STDOUT_FILENO);
 	if (argv[argc - 2][0] == '/')
 		commad_path(argv[argc - 2], envp);
-	else if (argv[argc - 2][0] == '.')
+	else if (argv[argc - 2][0] == '.' && argv[argc - 2][1] == '/')
 		run_script(argv[argc - 2], envp);
 	else
 		execute(argv[argc - 2], envp);
@@ -73,14 +78,14 @@ static void	lop(int argc, char *argv[], char **envp, int filein)
 	pid_t	*pids;
 
 	pids = (pid_t *)malloc((argc - 3) * sizeof(pid_t));
+	malloc_erro(pids);
 	i = 2;
 	while (i <= argc - 2)
 	{
+		filecommade(argv, envp, argc);
 		if (pipe(fd) == -1)
 			erro();
 		pids[i - 2] = fork();
-		if (pids[i - 2] == -1)
-			erro();
 		if (pids[i - 2] == 0 && i != argc - 2)
 		{
 			if (i == 2)

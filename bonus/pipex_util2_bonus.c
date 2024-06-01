@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus_util2.c                                :+:      :+:    :+:   */
+/*   pipex_util2_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 22:52:29 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/27 16:45:36 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ char	*get_path(char **envp, char *cmd, int i)
 
 	while (envp[i++])
 	{
-		if (ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i]) - 5) != NULL)
+		if (ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i])) != NULL)
 		{
-			path = ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i]) - 5) + 5; 
+			path = ft_strnstr(envp[i], "PATH=", ft_strlen(envp[i])) + 5; 
 			break ;
 		}
 	}
@@ -65,21 +65,21 @@ void	commad_path(char *argv, char **envp)
 	char	**res;
 	char	**cmd ;
 	int		i;
-	char	*path;
 	int		k;
 
-	path = argv;
 	i = 0;
 	k = ft_count_words(argv, '/');
 	cmd = malloc(2 * sizeof(char *));
+	if (!cmd)
+		exit(1);
 	res = ft_split(argv, '/');
 	cmd[0] = res[k - 1];
 	cmd[1] = NULL;
 	free(res); 
-	if (execve(path, cmd, envp) == -1)
+	if (execve(argv, cmd, envp) == -1)
 	{
 		perror("Bad command");
-		exit(127);
+		exit(0);
 	}
 }
 
@@ -102,22 +102,22 @@ void	execute(char *argv, char **envp)
 	if (execve(path, cmd, envp) == -1)
 	{
 		perror("Bad command");
-		exit(127);
+		exit(0);
 	}
 }
 
 void	run_script(char *script_path, char **envp)
 {
-	char	*path;
 	char	**cmd;
 
-	path = script_path;
 	cmd = malloc(2 * sizeof(char *));
+	if (!cmd)
+		exit(1);
 	cmd[0] = script_path;
 	cmd[1] = NULL;
-	if (execve(path, cmd, envp) == -1)
+	if (execve(script_path, cmd, envp) == -1)
 	{
 		perror("Bad command");
-		exit(127);
+		exit(0);
 	}
 }

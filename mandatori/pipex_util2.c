@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/25 22:30:45 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/03/27 00:13:34 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ char	**split_command(const char *command)
 	char	*end_ptr;
 	char	**cmd;
 
+	if (!command)
+		return (NULL);
 	capacity = 10;
 	cmd = malloc(capacity * sizeof(char *));
 	if (!cmd)
