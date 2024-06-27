@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/03 10:51:43 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/27 21:32:11 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/06/27 10:23:53 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include "../libftt_/libft.h"
 
 void	erro_file(void);
-void	ex(char *argv, char **envp);
 void	execute(char *argv, char **envp);
 char	**split_command(const char *command);
 void	bad_argument(void);

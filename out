@@ -1,0 +1,9 @@
+-rw-r--r--   1 ahamdi  candidates      0 Jun 27 10:00 in
+-rw-r--r--   1 ahamdi  candidates   1921 Jun 27 10:48 Makefile
+-rwxr-xr-x   1 ahamdi  candidates      0 Jun 27 10:55 out
+-rwxr-xr-x   1 ahamdi  candidates  18600 Jun 27 10:55 pipex
+drwxr-xr-x   5 ahamdi  candidates    170 Jun 27 10:48 getNextLine
+drwxr-xr-x   8 ahamdi  candidates    272 Jun 27 10:48 bonus
+drwxr-xr-x   8 ahamdi  candidates    272 Jun 27 10:55 mandatori
+drwxr-xr-x  39 ahamdi  candidates   1326 Jun 27 10:55 libftt_
+total 48

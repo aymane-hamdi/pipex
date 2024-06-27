@@ -6,7 +6,7 @@
 #    By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/11 17:43:15 by ahamdi            #+#    #+#              #
-#    Updated: 2024/03/29 17:05:41 by ahamdi           ###   ########.fr        #
+#    Updated: 2024/06/27 10:48:57 by ahamdi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ bonus_src = bonus/herdoc_bonus.c bonus/pipex_bonus.c bonus/pipex_util1_bonus.c  
 obj = $(src:.c=.o)
 bonus_obj = $(bonus_src:.c=.o)
 NAME = pipex
-BONUS_NAME = pipex_bonus
+BONUS_NAME = pipex_b
 LIBFT = libftt_/libft.a
 
 all:  $(NAME)

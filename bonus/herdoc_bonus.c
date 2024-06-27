@@ -1,34 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fontion_herdoc.c                                   :+:      :+:    :+:   */
+/*   herdoc_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 15:24:49 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/27 00:51:27 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/06/27 09:57:55 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
+static void	while_loop(char **argv, int *fd, int i)
+{
+	char	*str;
+	char	*strj;
+
+	while (1)
+	{
+		str = get_next_line(0);
+		strj = ft_strjoin(argv[i], "\n");
+		if (!str ||!ft_strncmp(strj, str, ft_strlen(str)))
+			break ;
+		ft_putstr_fd(str, fd[1]);
+		free(str);
+		free(strj);
+	}
+	free(str);
+	free(strj);
+}
+
 static void	child_process_her_doc(char **argv, char **envp, int *fd, int i)
 {
 	char	*str;
+	char	*strj;
 
 	if (i == 2)
-	{
-		while (1)
-		{
-			str = get_next_line(0);
-			if (!str
-				||!ft_strncmp(ft_strjoin(argv[i], "\n"), str, ft_strlen(str)))
-				break ;
-			ft_putstr_fd(str, fd[1]);
-			free(str);
-		}
-		free(str);
-	}
+		while_loop(argv, fd, i);
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	if (argv[i][0] == '/' && i != 2)

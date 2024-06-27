@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/27 00:13:34 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/06/27 10:40:25 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,3 +113,13 @@ char	**split_command(const char *command)
 	process_char(&cmd, &capacity, &start_ptr, &end_ptr);
 	return (cmd);
 }
+// int main ()
+// {
+// 	char **str ;
+// 	str = split_command("/bin/ls -l");
+// 	while(*str)
+// 	{
+// 		printf("%s\n", *str);
+// 		str++;
+// 	}
+// }

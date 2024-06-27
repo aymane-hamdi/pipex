@@ -6,7 +6,7 @@
 /*   By: ahamdi <ahamdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 10:54:23 by ahamdi            #+#    #+#             */
-/*   Updated: 2024/03/27 16:45:36 by ahamdi           ###   ########.fr       */
+/*   Updated: 2024/06/27 10:56:58 by ahamdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,21 +62,21 @@ static int	ft_count_words(char const *str, char sep)
 
 void	commad_path(char *argv, char **envp)
 {
-	char	**res;
-	char	**cmd ;
+	char	**cmd;
 	int		i;
-	int		k;
+	char	*path;
 
 	i = 0;
-	k = ft_count_words(argv, '/');
-	cmd = malloc(2 * sizeof(char *));
-	if (!cmd)
-		exit(1);
-	res = ft_split(argv, '/');
-	cmd[0] = res[k - 1];
-	cmd[1] = NULL;
-	free(res); 
-	if (execve(argv, cmd, envp) == -1)
+	cmd = split_command(argv);
+	path = cmd[0];
+	if (!path)
+	{
+		i = 0;
+		while (cmd[i])
+			free(cmd[i++]);
+		free(cmd);
+	}
+	if (execve(path, cmd, envp) == -1)
 	{
 		perror("Bad command");
 		exit(0);
